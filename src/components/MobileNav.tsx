@@ -74,7 +74,7 @@ export function MobileNav() {
             <motion.div
               initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-              className="fixed bottom-0 left-0 right-0 z-[70] bg-[#1A1A2E] rounded-t-2xl pb-[env(safe-area-inset-bottom)]"
+              className="fixed bottom-0 left-0 right-0 z-[70] rounded-t-2xl pb-[env(safe-area-inset-bottom)]"
               style={{ maxHeight: '85vh', overflowY: 'auto' }}
             >
               {/* Handle bar */}
@@ -91,7 +91,7 @@ export function MobileNav() {
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-white truncate">{profile.username}</p>
                   <div className="flex items-center gap-1 text-[11px] text-white/40">
-                    <Flame className="h-3 w-3 text-[#00B4D8]" />
+                    <Flame className="h-3 w-3 text-orange-400" />
                     <span>{profile.currentStreak}d streak</span>
                     {currentUser?.role === 'admin' && (
                       <span className="ml-2 px-1.5 py-0.5 rounded bg-[#F5A623]/20 text-[#00B4D8] text-[10px] font-bold">ADMIN</span>

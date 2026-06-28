@@ -36,8 +36,8 @@ function Mascot() {
     <div className="mascot-bounce flex items-center justify-center">
       {/* Owl-style mascot using emoji + glow ring */}
       <div className="relative">
-        <div className="w-20 h-20 rounded-[28px] bg-white/25 border-2 border-white/40 flex items-center justify-center shadow-xl backdrop-blur-sm">
-          <span className="text-4xl select-none" role="img" aria-label="owl">🦉</span>
+        <div className="w-20 h-20 rounded-[28px] overflow-hidden shadow-xl ring-2 ring-white/30">
+          <img src="./icons/icon-512.png" alt="LexoMaster owl" className="w-full h-full object-cover" />
         </div>
         {/* XP glow ring */}
         <div className="absolute -inset-1 rounded-[32px] border-2 border-white/20 animate-pulse-slow" />
