@@ -764,7 +764,7 @@ function doGet() {
           <InfoBox>
             <Info className="h-4 w-4 shrink-0 mt-0.5"/>
             <div>
-              <strong>User privacy:</strong> Keys are stored under a protected admin key (<code className="bg-blue-100 px-1 rounded text-xs">moe_admin_api_cfg</code>) and are never shown in any user-facing UI, settings pages, or RolePlay screens.
+              <strong>User privacy:</strong> Keys are stored under a protected admin key (<code className="bg-blue-100 px-1 rounded text-xs">moe_admin_api_cfg</code>) and are never shown in any user-facing UI, settings pages, or Practice screens.
             </div>
           </InfoBox>
           <WarnBox>

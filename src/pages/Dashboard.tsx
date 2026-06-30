@@ -9,11 +9,16 @@ import {
   Star,
   Volume2,
   GraduationCap,
+  Mic,
+  PenLine,
+  Award,
 } from 'lucide-react';
 import { useApp } from '@/App';
 import { useAuth } from '@/hooks/useAuth';
 import { useSpeech } from '@/hooks/useSpeech';
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell } from 'recharts';
+import { usePracticeSubmissions } from '@/hooks/usePracticeSubmissions';
+import { SPEAKING_TOPICS } from '@/data/speakingTopics';
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell, LineChart, Line } from 'recharts';
 
 export function Dashboard() {
   const navigate = useNavigate();
@@ -21,6 +26,7 @@ export function Dashboard() {
   const { currentUser } = useAuth();
   const { speak } = useSpeech();
   const stats = vocabulary.getStats();
+  const practice = usePracticeSubmissions(currentUser?.dataKey);
 
   const recentWords = vocabulary.words.slice(0, 5);
   const reviewWords = vocabulary.getWordsDueForReview().slice(0, 3);
@@ -293,6 +299,108 @@ export function Dashboard() {
               ))}
             </tbody>
           </table>
+        </div>
+      </motion.div>
+      {/* Writing & Speaking Practice */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.5 }}
+        className="rounded-2xl border border-border bg-card overflow-hidden"
+      >
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+          <div>
+            <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
+              <Mic className="h-4 w-4 text-[#F5A623]" strokeWidth={1.5} />
+              Speaking &amp; Writing Practice
+            </h2>
+            <p className="text-xs text-muted-foreground mt-0.5">AI-scored practice across all CEFR levels</p>
+          </div>
+          <button
+            onClick={() => navigate('/practice')}
+            className="flex items-center gap-1 text-sm text-[#F5A623] hover:text-[#E09400]"
+          >
+            Practice Now
+            <ArrowRight className="h-4 w-4" strokeWidth={1.5} />
+          </button>
+        </div>
+
+        <div className="p-6 space-y-5">
+          {/* Top stat row */}
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <div className="rounded-xl bg-muted/30 px-4 py-3 text-center">
+              <div className="flex items-center justify-center gap-1.5 mb-1">
+                <Award className="h-3.5 w-3.5 text-[#F5A623]" />
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Avg Score</span>
+              </div>
+              <p className="text-xl font-bold text-foreground" style={{ fontFamily: 'monospace' }}>{practice.stats.avgScore || '–'}</p>
+            </div>
+            <div className="rounded-xl bg-muted/30 px-4 py-3 text-center">
+              <div className="flex items-center justify-center gap-1.5 mb-1">
+                <PenLine className="h-3.5 w-3.5 text-[#4A90E2]" />
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Writing</span>
+              </div>
+              <p className="text-xl font-bold text-foreground" style={{ fontFamily: 'monospace' }}>{practice.stats.writingCount}</p>
+            </div>
+            <div className="rounded-xl bg-muted/30 px-4 py-3 text-center">
+              <div className="flex items-center justify-center gap-1.5 mb-1">
+                <Mic className="h-3.5 w-3.5 text-[#34C759]" />
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Speaking</span>
+              </div>
+              <p className="text-xl font-bold text-foreground" style={{ fontFamily: 'monospace' }}>{practice.stats.speakingCount}</p>
+            </div>
+            <div className="rounded-xl bg-muted/30 px-4 py-3 text-center">
+              <div className="flex items-center justify-center gap-1.5 mb-1">
+                <BookOpen className="h-3.5 w-3.5 text-[#9B5DE5]" />
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Topics Tried</span>
+              </div>
+              <p className="text-xl font-bold text-foreground" style={{ fontFamily: 'monospace' }}>
+                {practice.stats.topicsAttempted}<span className="text-xs text-muted-foreground">/{SPEAKING_TOPICS.length}</span>
+              </p>
+            </div>
+          </div>
+
+          {/* Score trend + per-level breakdown */}
+          <div className="grid gap-5 lg:grid-cols-2">
+            <div>
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Recent Score Trend</p>
+              {practice.stats.recentTrend.length > 0 ? (
+                <div className="h-[120px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={practice.stats.recentTrend}>
+                      <XAxis dataKey="date" hide />
+                      <YAxis domain={[0, 100]} hide />
+                      <Line type="monotone" dataKey="score" stroke="#F5A623" strokeWidth={2} dot={{ r: 3, fill: '#F5A623' }} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              ) : (
+                <div className="h-[120px] flex items-center justify-center text-xs text-muted-foreground border border-dashed border-border rounded-xl">
+                  No attempts yet — try a topic to see your trend
+                </div>
+              )}
+            </div>
+
+            <div>
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">By CEFR Level</p>
+              <div className="space-y-2">
+                {(['A1', 'A2', 'B1', 'B2', 'C1'] as const).map((lvl) => {
+                  const data = practice.stats.byLevel[lvl];
+                  return (
+                    <div key={lvl} className="flex items-center gap-3">
+                      <span className="text-xs font-bold px-2 py-0.5 rounded-full border bg-muted/40 text-muted-foreground shrink-0 w-8 text-center">{lvl}</span>
+                      <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
+                        <div className="h-full bg-[#F5A623] rounded-full" style={{ width: `${data.avgScore}%` }} />
+                      </div>
+                      <span className="text-xs text-muted-foreground w-16 text-right">
+                        {data.count > 0 ? `${data.avgScore} avg` : '–'}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
         </div>
       </motion.div>
     </motion.div>

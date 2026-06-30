@@ -14,7 +14,7 @@ const BAR_ITEMS = [
   { to: '/',            label: 'Home',    icon: LayoutDashboard, exact: true,  prefix: '/'         },
   { to: '/words',       label: 'Words',   icon: BookOpen,        exact: false, prefix: '/words'    },
   { to: '/study/level', label: 'Journey', icon: TrendingUp,      exact: false, prefix: '/study'    },
-  { to: '/roleplay',    label: 'Speak',   icon: Mic,             exact: false, prefix: '/roleplay' },
+  { to: '/practice',    label: 'Speak',   icon: Mic,             exact: false, prefix: '/practice' },
   { to: '__menu__',     label: 'More',    icon: Menu,            exact: false, prefix: '__menu__'  },
 ];
 
